@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Col } from 'react-bootstrap';
 
 class Card extends Component {
   render() {

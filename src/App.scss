@@ -58,5 +58,14 @@ body {
 
 .card {
   display: inline-block;
+}
+
+.cardStack{
   height: 311px;
+  margin-bottom: -280px;
+  position: relative;
+}
+
+.cardStack:hover {
+  z-index: 9999;
 }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { Grid, Row, Col, Button, DropdownButton, MenuItem } from 'react-bootstrap';
-// import mtg from 'mtgsdk';
 
 import './App.css';
 
@@ -11,6 +10,8 @@ import Card from './components/Card';
 
 // set a constant for the number of booster packs to fetch
 const numBoosters = 6;
+
+// set a constant array of standard filters
 const cardFilters = ['White', 'Blue', 'Black', 'Red', 'Green', 'Multicolored', 'Colorless', 'Land',
 ];
 
@@ -47,9 +48,11 @@ class App extends Component {
     this.getSealedCardPool = this.getSealedCardPool.bind(this);
     this.renderCard = this.renderCard.bind(this);
     this.renderCardStack = this.renderCardStack.bind(this);
-    this.sortByColor = this.sortByColor.bind(this);
     this.filterCardPoolByColor = this.filterCardPoolByColor.bind(this);
     this.setFilteredCards = this.setFilteredCards.bind(this);
+    this.sortCardPoolByColor = this.sortCardPoolByColor.bind(this);
+
+    this.addCardToDeck = this.addCardToDeck.bind(this);
   }
 
   componentDidMount() {
@@ -83,66 +86,9 @@ class App extends Component {
     }
   }
 
-  sortByColor() {
-    const { cardPool } = this.state;
-    let sortedCardsByColor = [];
-
-    const whiteCards = _.filter(cardPool, card =>
-      _.isArray(card.colors)
-      && card.colors.length === 1
-      && _.indexOf(card.colors, 'White') !== -1,
-    );
-    const blueCards = _.filter(cardPool, card =>
-      _.isArray(card.colors)
-      && card.colors.length === 1
-      && _.indexOf(card.colors, 'Blue') !== -1,
-    );
-    const blackCards = _.filter(cardPool, card =>
-      _.isArray(card.colors)
-      && card.colors.length === 1
-      && _.indexOf(card.colors, 'Black') !== -1,
-    );
-    const redCards = _.filter(cardPool, card =>
-      _.isArray(card.colors)
-      && card.colors.length === 1
-      && _.indexOf(card.colors, 'Red') !== -1,
-    );
-    const greenCards = _.filter(cardPool, card =>
-      _.isArray(card.colors)
-      && card.colors.length === 1
-      && _.indexOf(card.colors, 'Green') !== -1,
-    );
-    const multicolored = _.filter(cardPool, card =>
-      _.isArray(card.colors)
-      && card.colors.length > 1,
-    );
-    const colorless = _.filter(cardPool, card =>
-      !_.isArray(card.colors)
-      && _.isArray(card.types)
-      && _.indexOf(card.types, 'Land') === -1,
-    );
-    const land = _.filter(cardPool, card =>
-      _.isArray(card.types)
-      && _.indexOf(card.types, 'Land') !== -1,
-    );
-
-    sortedCardsByColor = [
-      whiteCards,
-      blueCards,
-      blackCards,
-      redCards,
-      greenCards,
-      multicolored,
-      colorless,
-      land,
-    ];
-
-    console.log(sortedCardsByColor);
-    this.setState({ sortedCards: sortedCardsByColor, cardsToDisplay: sortedCardsByColor });
-  }
-
-  sortCardPoolByColor() {
-
+  setFilteredCards(filter) {
+    const cards = this.filterCardPoolByColor(filter);
+    this.setState({ cardsToDisplay: cards });
   }
 
   filterCardPoolByColor(filter) {
@@ -177,18 +123,30 @@ class App extends Component {
         );
         break;
     }
-    // this.setState({ cardsToDisplay: [filteredCards] });
+
     return [filteredCards];
   }
 
-  setFilteredCards(filter) {
-    const cards = this.filterCardPoolByColor(filter);
-    this.setState({ cardsToDisplay: cards });
+  sortCardPoolByColor() {
+    const sortedCardPool = cardFilters.map(filter => this.filterCardPoolByColor(filter));
+    this.setState({ cardsToDisplay: _.flatten(sortedCardPool) });
+  }
+
+  addCardToDeck(card) {
+    const { cardsInDeck, cardPool, cardsToDisplay } = this.state;
+
+    _.remove(cardPool, cardInPool => cardInPool === card);
+    _.remove(cardsToDisplay, cardInPool => cardInPool === card);
+    cardsInDeck.push(card);
+
+    this.setState({ cardPool, cardsInDeck, cardsToDisplay });
+    console.log(card);
+    console.log(cardsInDeck);
   }
 
   renderCard(cardProps, index) {
     return (
-      <Card card={cardProps} key={index} onClick={this.addCardToDeck} />
+      <Card card={cardProps} key={index} onClick={() => this.addCardToDeck(cardProps)} />
     );
   }
 
@@ -240,7 +198,7 @@ class App extends Component {
             </Col>
           </Row>
           <Row>
-            <Button onClick={this.sortByColor}>Organize Cards</Button>
+            <Button onClick={this.sortCardPoolByColor}>Organize Cards</Button>
             <DropdownButton
               id="colorFilter"
               title="Filter by Color"
