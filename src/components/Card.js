@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+const React = require('react');
+const PropTypes = require('prop-types');
 
-class Card extends Component {
+class Card extends React.Component {
   render() {
     const { card, onClick } = this.props;
     return (
@@ -22,4 +22,4 @@ Card.propTypes = {
   onClick: PropTypes.func,
 };
 
-export default Card;
+module.exports = Card;
