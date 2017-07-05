@@ -104,6 +104,31 @@ class App extends Component {
     this.setState({ cardsToDisplay: cards });
   }
 
+  getDeck() {
+    const { cardsInDeck } = this.state;
+    this.setState({ cardsToDisplay: [cardsInDeck] });
+  }
+
+  moveCard(card) {
+    const { cardsInDeck, cardPool, cardsToDisplay } = this.state;
+    if (_.isEqual(cardsInDeck, _.flatten(cardsToDisplay))) {
+      _.remove(cardsInDeck, cardInPool => cardInPool === card);
+      _.each(cardsToDisplay, cardStack => (_.remove(cardStack, cardInPool => cardInPool === card)));
+      cardPool.push(card);
+    } else {
+      _.remove(cardPool, cardInPool => cardInPool === card);
+      _.each(cardsToDisplay, cardStack => (_.remove(cardStack, cardInPool => cardInPool === card)));
+      cardsInDeck.push(card);
+    }
+
+    this.setState({ cardPool, cardsInDeck, cardsToDisplay });
+  }
+
+  sortCardPoolByColor() {
+    const sortedCardPool = cardFilters.map(filter => this.filterCardPool(filter));
+    this.setState({ cardsToDisplay: _.flatten(sortedCardPool) });
+  }
+
   filterCardPool(filter) {
     const { cardPool } = this.state;
     let filteredCards = [];
@@ -138,31 +163,6 @@ class App extends Component {
     }
 
     return [filteredCards];
-  }
-
-  sortCardPoolByColor() {
-    const sortedCardPool = cardFilters.map(filter => this.filterCardPool(filter));
-    this.setState({ cardsToDisplay: _.flatten(sortedCardPool) });
-  }
-
-  moveCard(card) {
-    const { cardsInDeck, cardPool, cardsToDisplay } = this.state;
-    if (_.isEqual(cardsInDeck, _.flatten(cardsToDisplay))) {
-      _.remove(cardsInDeck, cardInPool => cardInPool === card);
-      _.each(cardsToDisplay, cardStack => (_.remove(cardStack, cardInPool => cardInPool === card)));
-      cardPool.push(card);
-    } else {
-      _.remove(cardPool, cardInPool => cardInPool === card);
-      _.each(cardsToDisplay, cardStack => (_.remove(cardStack, cardInPool => cardInPool === card)));
-      cardsInDeck.push(card);
-    }
-
-    this.setState({ cardPool, cardsInDeck, cardsToDisplay });
-  }
-
-  getDeck() {
-    const { cardsInDeck } = this.state;
-    this.setState({ cardsToDisplay: [cardsInDeck] });
   }
 
   renderCard(cardProps, index) {
