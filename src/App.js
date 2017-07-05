@@ -12,7 +12,15 @@ import Card from './components/Card';
 const numBoosters = 6;
 
 // set a constant array of standard filters
-const cardFilters = ['White', 'Blue', 'Black', 'Red', 'Green', 'Multicolored', 'Colorless', 'Land',
+const cardFilters = [
+  'White',
+  'Blue',
+  'Black',
+  'Red',
+  'Green',
+  'Multicolored',
+  'Colorless',
+  'Land',
 ];
 
 const renderSetOptions = sets => (
@@ -48,11 +56,11 @@ class App extends Component {
     this.getSealedCardPool = this.getSealedCardPool.bind(this);
     this.renderCard = this.renderCard.bind(this);
     this.renderCardStack = this.renderCardStack.bind(this);
-    this.filterCardPoolByColor = this.filterCardPoolByColor.bind(this);
+    this.filterCardPool = this.filterCardPool.bind(this);
     this.setFilteredCards = this.setFilteredCards.bind(this);
     this.sortCardPoolByColor = this.sortCardPoolByColor.bind(this);
-
     this.addCardToDeck = this.addCardToDeck.bind(this);
+    this.getDeck = this.getDeck.bind(this);
   }
 
   componentDidMount() {
@@ -87,11 +95,11 @@ class App extends Component {
   }
 
   setFilteredCards(filter) {
-    const cards = this.filterCardPoolByColor(filter);
+    const cards = this.filterCardPool(filter);
     this.setState({ cardsToDisplay: cards });
   }
 
-  filterCardPoolByColor(filter) {
+  filterCardPool(filter) {
     const { cardPool } = this.state;
     let filteredCards = [];
 
@@ -128,7 +136,7 @@ class App extends Component {
   }
 
   sortCardPoolByColor() {
-    const sortedCardPool = cardFilters.map(filter => this.filterCardPoolByColor(filter));
+    const sortedCardPool = cardFilters.map(filter => this.filterCardPool(filter));
     this.setState({ cardsToDisplay: _.flatten(sortedCardPool) });
   }
 
@@ -139,6 +147,11 @@ class App extends Component {
     cardsInDeck.push(card);
 
     this.setState({ cardPool, cardsInDeck, cardsToDisplay });
+  }
+
+  getDeck() {
+    const { cardsInDeck } = this.state;
+    this.setState({ cardsToDisplay: [cardsInDeck] });
   }
 
   renderCard(cardProps, index) {
@@ -195,10 +208,10 @@ class App extends Component {
             </Col>
           </Row>
           <Row>
-            <Button onClick={this.sortCardPoolByColor}>Organize Cards</Button>
+            <Button onClick={this.sortCardPoolByColor}>Show All Cards</Button>
             <DropdownButton
               id="colorFilter"
-              title="Filter by Color"
+              title="Filter Card Pool by Color"
               onSelect={this.setFilteredCards}
             >
               <MenuItem eventKey="White">White</MenuItem>
@@ -210,6 +223,7 @@ class App extends Component {
               <MenuItem eventKey="Colorless">Colorless</MenuItem>
               <MenuItem eventKey="Land">Land</MenuItem>
             </DropdownButton>
+            <Button onClick={this.getDeck}>View Deck</Button>
           </Row>
           <Row>
             <div className="cardStack">
