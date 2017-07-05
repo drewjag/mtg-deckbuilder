@@ -9,6 +9,10 @@ body {
   font-size: 12px;
 }
 
+h1 {
+  font-family: 'Bellefair', serif;
+}
+
 .mtgLogo {
   background-image: url('img/mtgLogo.png');
   background-repeat: no-repeat;
@@ -76,6 +80,10 @@ body {
 
 .cardStack {
   margin-top: 15px;
+}
+
+.viewDeckButton {
+    float: right;
 }
 
 // .cardStack{
