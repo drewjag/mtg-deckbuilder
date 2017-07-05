@@ -255,7 +255,7 @@ class App extends Component {
             </Col>
           </Row>
           <Row>
-            <Button onClick={this.sortCardPoolByColor}>Organize &amp; Show Card Pool</Button>
+            <Button onClick={this.sortCardPoolByColor}>Show &amp; Organize Card Pool</Button>
             <DropdownButton
               id="colorFilter"
               title="Filter Card Pool"
