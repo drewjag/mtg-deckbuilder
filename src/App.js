@@ -188,16 +188,19 @@ class App extends Component {
         <div className="app">
           <Grid>
             <Row>
+              <Col xs={12} sm={4} md={4} lg={4}>
+                <div className="mtgLogo" />
+              </Col>
               <Col xs={12} sm={12} md={12} lg={12}>
                 <h1>Sealed Deck Builder</h1>
               </Col>
             </Row>
             <Row>
-              <Col xs={4} sm={4} md={4} lg={4}>
+              <Col xs={12} sm={4} md={4} lg={4}>
                 {renderSetSelect(sets, this.setMtgSet)}
               </Col>
-              <Col xs={4} sm={4} md={4} lg={4}>
-                <Button onClick={this.getSealedCardPool}>Open Booster Packs</Button>
+              <Col xs={12} sm={4} md={4} lg={4}>
+                <Button block onClick={this.getSealedCardPool}>Open Booster Packs</Button>
               </Col>
             </Row>
           </Grid>
