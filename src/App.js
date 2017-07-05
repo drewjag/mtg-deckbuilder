@@ -59,7 +59,7 @@ class App extends Component {
     this.filterCardPool = this.filterCardPool.bind(this);
     this.setFilteredCards = this.setFilteredCards.bind(this);
     this.sortCardPoolByColor = this.sortCardPoolByColor.bind(this);
-    this.addCardToDeck = this.addCardToDeck.bind(this);
+    this.moveCard = this.moveCard.bind(this);
     this.getDeck = this.getDeck.bind(this);
   }
 
@@ -140,11 +140,17 @@ class App extends Component {
     this.setState({ cardsToDisplay: _.flatten(sortedCardPool) });
   }
 
-  addCardToDeck(card) {
+  moveCard(card) {
     const { cardsInDeck, cardPool, cardsToDisplay } = this.state;
-    _.remove(cardPool, cardInPool => cardInPool === card);
-    _.each(cardsToDisplay, cardStack => (_.remove(cardStack, cardInPool => cardInPool === card)));
-    cardsInDeck.push(card);
+    if (_.isEqual(cardsInDeck, _.flatten(cardsToDisplay))) {
+      _.remove(cardsInDeck, cardInPool => cardInPool === card);
+      _.each(cardsToDisplay, cardStack => (_.remove(cardStack, cardInPool => cardInPool === card)));
+      cardPool.push(card);
+    } else {
+      _.remove(cardPool, cardInPool => cardInPool === card);
+      _.each(cardsToDisplay, cardStack => (_.remove(cardStack, cardInPool => cardInPool === card)));
+      cardsInDeck.push(card);
+    }
 
     this.setState({ cardPool, cardsInDeck, cardsToDisplay });
   }
@@ -156,7 +162,7 @@ class App extends Component {
 
   renderCard(cardProps, index) {
     return (
-      <Card card={cardProps} key={index} onClick={() => this.addCardToDeck(cardProps)} />
+      <Card card={cardProps} key={index} onClick={() => this.moveCard(cardProps)} />
     );
   }
 
