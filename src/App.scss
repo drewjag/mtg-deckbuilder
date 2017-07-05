@@ -1,5 +1,9 @@
 body {
-  background-color: #8D8A9D;
+  background-color: #333333;
+  background-image: url('img/jace.png');
+  background-position: bottom right;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   color: #FFFFFF;
   font-family: Helvetica, Verdana, sans-serif;
   font-size: 12px;
@@ -58,14 +62,19 @@ body {
 
 .card {
   display: inline-block;
+  margin:5px;
 }
 
-.cardStack{
-  height: 311px;
-  margin-bottom: -280px;
-  position: relative;
+.cardStack {
+  margin-top: 15px;
 }
 
-.cardStack:hover {
-  z-index: 9999;
-}
+// .cardStack{
+//   height: 311px;
+//   margin-bottom: -280px;
+//   position: relative;
+// }
+//
+// .cardStack:hover {
+//   z-index: 9999;
+// }
