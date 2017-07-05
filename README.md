@@ -2,9 +2,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 Clone this repository.
 
-Install the necessary packages by running:
-`yarn install` or `npm install`
-Run the app in the development mode by running:
+Install the necessary packages by running:<br>
+`yarn install` or `npm install`<br>
+Run the app in the development mode by running:<br>
 `yarn start` or `npm start`
 
 Then open [http://localhost:3000](http://localhost:3000) to view it in the browser.
