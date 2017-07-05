@@ -71,8 +71,8 @@ class App extends Component {
   getSealedCardPool() {
     // this.setState({ isLoading: true });
     const { selectedSet } = this.state;
-    const getBoosterURL = `https://api.magicthegathering.io/v1/sets/${selectedSet}/booster`;
     let { cardPool } = this.state;
+    const getBoosterURL = `https://api.magicthegathering.io/v1/sets/${selectedSet}/booster`;
 
     if (!_.isEmpty(selectedSet)) {
       _.times(numBoosters, () => get(getBoosterURL)
@@ -134,14 +134,11 @@ class App extends Component {
 
   addCardToDeck(card) {
     const { cardsInDeck, cardPool, cardsToDisplay } = this.state;
-
     _.remove(cardPool, cardInPool => cardInPool === card);
-    _.remove(cardsToDisplay, cardInPool => cardInPool === card);
+    _.each(cardsToDisplay, cardStack => (_.remove(cardStack, cardInPool => cardInPool === card)));
     cardsInDeck.push(card);
 
     this.setState({ cardPool, cardsInDeck, cardsToDisplay });
-    console.log(card);
-    console.log(cardsInDeck);
   }
 
   renderCard(cardProps, index) {
