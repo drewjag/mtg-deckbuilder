@@ -19,4 +19,4 @@ const get = url =>
     req.send();
   });
 
-export default get;
+module.exports = get;

@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
-import _ from 'lodash';
-import { Grid, Row, Col, Button, DropdownButton, MenuItem } from 'react-bootstrap';
+require('./App.css');
 
-import './App.css';
-
-import get from './utils/get';
-import Loader from './components/Loader';
-import Card from './components/Card';
+const React = require('react');
+const _ = require('lodash');
+const { Grid, Row, Col, Button, DropdownButton, MenuItem } = require('react-bootstrap');
+const get = require('./utils/get');
+const Loader = require('./components/Loader');
+const renderSetSelect = require('./components/setSelector');
+const Card = require('./components/Card');
+const filterCardPool = require('./components/filter');
 
 // set a constant for the number of booster packs to fetch
 const numBoosters = 6;
@@ -23,20 +24,7 @@ const cardFilters = [
   'Land',
 ];
 
-const renderSetOptions = sets => (
-  sets.map(
-    set => (<option key={set.code} value={set.code}>{set.name}</option>),
-  )
-);
-
-const renderSetSelect = (sets, onChangeFunc) => (
-  <select className="form-control" onChange={onChangeFunc}>
-    <option>Choose a set</option>
-    {renderSetOptions(sets)}
-  </select>
-);
-
-class App extends Component {
+class App extends React.Component {
   constructor() {
     super();
 
@@ -56,7 +44,6 @@ class App extends Component {
     this.getSealedCardPool = this.getSealedCardPool.bind(this);
     this.renderCard = this.renderCard.bind(this);
     this.renderCardStack = this.renderCardStack.bind(this);
-    this.filterCardPool = this.filterCardPool.bind(this);
     this.setFilteredCards = this.setFilteredCards.bind(this);
     this.sortCardPoolByColor = this.sortCardPoolByColor.bind(this);
     this.moveCard = this.moveCard.bind(this);
@@ -94,13 +81,15 @@ class App extends Component {
         },
       )
       .then(
+        // remove loading state when we get some data to display
         () => this.setState({ isLoading: false }),
       ));
     }
   }
 
   setFilteredCards(filter) {
-    const cards = this.filterCardPool(filter);
+    const { cardPool } = this.state;
+    const cards = filterCardPool(filter, cardPool);
     this.setState({ cardsToDisplay: cards });
   }
 
@@ -111,11 +100,14 @@ class App extends Component {
 
   moveCard(card) {
     const { cardsInDeck, cardPool, cardsToDisplay } = this.state;
+
     if (_.isEqual(cardsInDeck, _.flatten(cardsToDisplay))) {
+      // viewing deck list - move card out of the deck and into the card pool
       _.remove(cardsInDeck, cardInPool => cardInPool === card);
       _.each(cardsToDisplay, cardStack => (_.remove(cardStack, cardInPool => cardInPool === card)));
       cardPool.push(card);
     } else {
+      // viewing card pool - move card out of the card pool and add it to the deck
       _.remove(cardPool, cardInPool => cardInPool === card);
       _.each(cardsToDisplay, cardStack => (_.remove(cardStack, cardInPool => cardInPool === card)));
       cardsInDeck.push(card);
@@ -125,44 +117,9 @@ class App extends Component {
   }
 
   sortCardPoolByColor() {
-    const sortedCardPool = cardFilters.map(filter => this.filterCardPool(filter));
-    this.setState({ cardsToDisplay: _.flatten(sortedCardPool) });
-  }
-
-  filterCardPool(filter) {
     const { cardPool } = this.state;
-    let filteredCards = [];
-
-    switch (filter) {
-      case 'Multicolored':
-        filteredCards = _.filter(cardPool, card =>
-          _.isArray(card.colors)
-          && card.colors.length > 1,
-        );
-        break;
-      case 'Colorless':
-        filteredCards = _.filter(cardPool, card =>
-          !_.isArray(card.colors)
-          && _.isArray(card.types)
-          && _.indexOf(card.types, 'Land') === -1,
-        );
-        break;
-      case 'Land':
-        filteredCards = _.filter(cardPool, card =>
-          _.isArray(card.types)
-          && _.indexOf(card.types, 'Land') !== -1,
-        );
-        break;
-      default:
-        filteredCards = _.filter(cardPool, card =>
-          _.isArray(card.colors)
-          && card.colors.length === 1
-          && _.indexOf(card.colors, filter) !== -1,
-        );
-        break;
-    }
-
-    return [filteredCards];
+    const sortedCardPool = cardFilters.map(filter => filterCardPool(filter, cardPool));
+    this.setState({ cardsToDisplay: _.flatten(sortedCardPool) });
   }
 
   renderCard(cardProps, index) {
@@ -283,4 +240,4 @@ class App extends Component {
   }
 }
 
-export default App;
+module.exports = App;

@@ -29,8 +29,7 @@
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
     "start": "npm-run-all -p watch-css start-js",
     "build": "npm run build-css && react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "test-tap": "NODE_PATH=./ node_modules/.bin/tape -r babel-register -r ./src/test-utils/setupJSDom.js \"$npm_package_config_paths\" | tap-spec",
+    "test": "NODE_PATH=./ node_modules/.bin/tape -r babel-register -r ./src/test-utils/setupJSDom.js \"$npm_package_config_paths\" | tap-spec",
     "eject": "react-scripts eject"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-import React from 'react';
+const React = require('react');
 
 const Loader = () => (
   <div className="loader">
@@ -10,4 +10,4 @@ const Loader = () => (
   </div>
 );
 
-export default Loader;
+module.exports = Loader;
